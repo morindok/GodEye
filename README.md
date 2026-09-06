@@ -18,10 +18,9 @@
 
 آخرین نسخهٔ APK (debug) از آپشن‌های **Actions** این ریپو قابل دانلود است:
 
-1. وارد تب [Actions](https://github.com/morindok/GodEye/actions) شوید.
-2. روی آخرین اجرای موفق **Build God Eye APK** کلیک کنید (تیک سبز ✓).
-3. از بخش **Artifacts** فایل `GodEye-debug-APK` را دانلود کنید.
-4. فایل ZIP را باز کنید و `app-debug.apk` را روی گوشی اندروید ۸ به بالا نصب کنید (اجازه «نصب از منابع ناشناس» را تأیید کنید).
+1. آخرین نسخهٔ APK مستقیماً از صفحهٔ [Releases](https://github.com/morindok/GodEye/releases/latest) قابل دانلود است — فایل `app-debug.apk` را دریافت کنید.
+2. (روش جایگزین) وارد تب [Actions](https://github.com/morindok/GodEye/actions) شوید و از آخرین اجرای موفق **Build God Eye APK**، بخش **Artifacts** فایل `GodEye-debug-APK` را بگیرید.
+3. فایل را روی گوشی اندروید ۸ به بالا نصب کنید (اجازه «نصب از منابع ناشناس» را تأیید کنید).
 
 ## 🎯 ویژگی‌ها
 
