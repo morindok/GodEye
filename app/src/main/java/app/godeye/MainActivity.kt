@@ -54,6 +54,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.delay
 import java.io.File
+import java.util.UUID
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -333,6 +334,24 @@ private fun ProfileScreen(vm: EyeViewModel, modifier: Modifier) {
             Text("Your provider must support image input and an OpenAI Chat Completions-compatible API — not just text models.", color = Muted, modifier = Modifier.padding(top = 8.dp))
         }
         item { Button(onClick = { editing = ModelProfile() }) { Text("+ Add model") } }
+        item {
+            Surface(shape = RoundedCornerShape(12.dp), color = Panel) {
+                Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text("Verified vision presets", fontSize = 18.sp, fontWeight = FontWeight.Medium)
+                    Text("These providers were tested and confirmed to accept image input. Pick one, then paste your own API key — keys are never bundled with the app.", color = Muted, fontSize = 14.sp)
+                    VisionPresets.forEach { preset ->
+                        OutlinedButton(onClick = { editing = preset.copy(id = UUID.randomUUID().toString(), apiKey = "") },
+                            modifier = Modifier.fillMaxWidth()) {
+                            Column(Modifier.fillMaxWidth()) {
+                                Text(preset.name, color = Blue)
+                                Text(preset.model, color = Muted, fontSize = 12.sp)
+                            }
+                        }
+                    }
+                    Text("How to get an API key:\n• LLMTR — register at llmtr.com, copy the key from your dashboard.\n• Bynara — create an account at bynara.id, generate a key under API settings.\n• AshnaAI — sign up at ashna.ai and request a key from the developer panel.", color = Muted, fontSize = 13.sp)
+                }
+            }
+        }
         items(vm.state.profiles, key = { it.id }) { profile ->
             Surface(shape = RoundedCornerShape(12.dp), color = Panel, border = androidx.compose.foundation.BorderStroke(1.dp, if(vm.state.selectedId == profile.id) Blue else Line)) {
                 Column(Modifier.fillMaxWidth().padding(16.dp)) {

@@ -12,6 +12,16 @@ data class ModelProfile(
     val model: String = "",
     val apiKey: String = ""
 )
+/** Verified image-analysis model presets. apiKey stays empty — the user supplies their own key. */
+val VisionPresets: List<ModelProfile> = listOf(
+    ModelProfile(name = "GPT-6 Astra Free (LLMTR)", endpoint = "https://llmtr.com/v1/chat/completions", model = "openai/gpt-6-astra-free"),
+    ModelProfile(name = "StepFun 3.7 Flash (Bynara)", endpoint = "https://router.bynara.id/v1/chat/completions", model = "stepfun-3.7-flash"),
+    ModelProfile(name = "Agnes 2.5 Flash (Bynara)", endpoint = "https://router.bynara.id/v1/chat/completions", model = "agnes-2.5-flash"),
+    ModelProfile(name = "MiniMax M3 Free (Bynara)", endpoint = "https://router.bynara.id/v1/chat/completions", model = "minimax-m3-free"),
+    ModelProfile(name = "Muse Spark 1.2 (Bynara)", endpoint = "https://router.bynara.id/v1/chat/completions", model = "muse-spark-1.2-contributor-free"),
+    ModelProfile(name = "Ashna X1 (AshnaAI)", endpoint = "https://api.ashna.ai/v1/api/chat/completions", model = "ashna-x1")
+)
+
 object EndpointPolicy {
     private val loopbackHosts = setOf("localhost", "127.0.0.1", "[::1]", "0.0.0.0")
     fun validate(value: String): String? = try {
