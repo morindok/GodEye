@@ -13,10 +13,13 @@ data class ModelProfile(
     val apiKey: String = ""
 )
 object EndpointPolicy {
+    private val loopbackHosts = setOf("localhost", "127.0.0.1", "[::1]", "0.0.0.0")
     fun validate(value: String): String? = try {
         val uri = URI(value)
+        val isLoopback = uri.host != null && uri.host.lowercase() in loopbackHosts
         when {
-            uri.scheme != "https" -> "The endpoint must start with https://."
+            uri.scheme != "https" && !(isLoopback && uri.scheme == "http") ->
+                "The endpoint must start with https:// (http:// is allowed for localhost only)."
             uri.host.isNullOrBlank() -> "The host address is invalid."
             uri.rawUserInfo != null || uri.rawQuery != null || uri.rawFragment != null ->
                 "The URL must not contain credentials, query parameters, or fragments."
