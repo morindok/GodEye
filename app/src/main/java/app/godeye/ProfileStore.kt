@@ -45,6 +45,6 @@ class ProfileStore(context: Context) {
         cipher.init(Cipher.ENCRYPT_MODE, key())
         val payload = Base64.encodeToString(cipher.iv, Base64.NO_WRAP) + ":" +
             Base64.encodeToString(cipher.doFinal(json.toString().toByteArray(Charsets.UTF_8)), Base64.NO_WRAP)
-        check(prefs.edit().putString("payload", payload).commit()) { "ذخیره انجام نشد." }
+        check(prefs.edit().putString("payload", payload).commit()) { "Save failed." }
     }
 }

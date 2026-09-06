@@ -1,65 +1,44 @@
-# 👁️ God Eye — چشم تحلیل‌گر
+# 👁️ God Eye
 
-<div dir="rtl">
-
-اپلیکیشن تحلیل‌گر دوربین هوشمند برای اندروید، ساخته‌شده با **Kotlin**، **Jetpack Compose** و **CameraX** — رابط فارسی و راست‌به‌چپ، تشخیص صحنه با هوش مصنوعی و هشدار صوتی.
-
-</div>
+Smart camera scene-analysis app for Android, built with **Kotlin**, **Jetpack Compose**, and **CameraX** — AI-powered scene understanding, voice alerts, and encrypted local profile storage.
 
 [![Build APK](https://github.com/morindok/GodEye/actions/workflows/android.yml/badge.svg)](https://github.com/morindok/GodEye/actions/workflows/android.yml)
 [![Platform](https://img.shields.io/badge/platform-Android%208.0%2B-green)](https://developer.android.com)
 [![Language](https://img.shields.io/badge/language-Kotlin-blue.svg)](https://kotlinlang.org)
 [![UI](https://img.shields.io/badge/UI-Jetpack%20Compose-7C4DFF)](https://developer.android.com/jetpack/compose)
-[![License](https://img.shields.io/badge/license-proprietary-orange)]()
 
-<div dir="rtl">
+## 📥 Download APK
 
-## 📥 دانلود APK
+1. Grab the latest `app-debug.apk` directly from the [Releases](https://github.com/morindok/GodEye/releases/latest) page.
+2. Alternative: open the [Actions](https://github.com/morindok/GodEye/actions) tab and download the `GodEye-debug-APK` artifact from the latest successful **Build God Eye APK** run.
+3. Install on Android 8.0+ (allow "install from unknown sources" for your browser/file manager when prompted).
 
-آخرین نسخهٔ APK (debug) از آپشن‌های **Actions** این ریپو قابل دانلود است:
+## 🎯 Features
 
-1. آخرین نسخهٔ APK مستقیماً از صفحهٔ [Releases](https://github.com/morindok/GodEye/releases/latest) قابل دانلود است — فایل `app-debug.apk` را دریافت کنید.
-2. (روش جایگزین) وارد تب [Actions](https://github.com/morindok/GodEye/actions) شوید و از آخرین اجرای موفق **Build God Eye APK**، بخش **Artifacts** فایل `GodEye-debug-APK` را بگیرید.
-3. فایل را روی گوشی اندروید ۸ به بالا نصب کنید (اجازه «نصب از منابع ناشناس» را تأیید کنید).
+- 🔍 **AI scene analysis** — connects to your own vision model service (HTTPS + Bearer key).
+- 🔊 **Automatic voice alerts** — announces results via the system TTS engine.
+- 🔐 **AES-GCM encryption with Android Keystore** — secure storage for API keys and profiles.
+- 📸 **Real CameraX integration** — back camera (front fallback) with runtime permission handling.
+- 🎨 **Modern UI** — Jetpack Compose + Material 3.
+- 🧪 **Test coverage** — JUnit unit tests and lint run automatically on every push.
 
-## 🎯 ویژگی‌ها
+## How it works
 
-- 🔍 **تحلیل صحنه با هوش مصنوعی** — اتصال به سرویس‌های بینایی ماشین (HTTPS + کلید Bearer).
-- 🔊 **هشدار صوتی خودکار** — اعلام نتایج با تشخیص گفتار سیستم.
-- 🔐 **رمزنگاری AES-GCM با Android Keystore** — ذخیرهٔ امن کلیدها و پروفایل‌ها.
-- 📸 **دوربین واقعی CameraX** — دوربین عقب (و جلو در نبود عقب) با مدیریت مجوز.
-- 🌓 **رابط فارسی راست‌به‌چپ** — طراحی مدرن با Jetpack Compose و Material 3.
-- 🧪 **پوشش تست** — تست‌های JUnit و lint در هر push به‌صورت خودکار اجرا می‌شوند.
+- Real camera preview with permission request; back camera first, front camera as fallback.
+- Multiple model profiles: name, full HTTPS endpoint, model ID, and Bearer key.
+- Profiles are stored encrypted with AES-GCM and an Android Keystore key; no hardcoded keys.
+- On-demand single-shot analysis; optional periodic monitoring every 15 seconds with at most one in-flight request.
+- Five-part structured report: evidence, relations, hypotheses, unknowns, and follow-up checks.
+- Raw-text fallback display when the model does not return structured JSON.
+- Monitoring stops and requests are cancelled when the app goes to background or the tab changes.
+- Images are downscaled to a 1280px long edge, orientation-corrected, and rewritten as JPEG with EXIF stripped.
+- The last analysis shows timestamp and model name; a report refers to one captured photo, not a live feed.
 
-</div>
+The name "God Eye" is metaphorical. The app cannot see through objects, read minds, identify hidden truths, or perform 3D scanning. The model may be wrong; cautionary prompt instructions do not guarantee model behavior.
 
-## چه کار می‌کند؟
+## Building locally
 
-- دوربین واقعی با درخواست مجوز؛ دوربین عقب و در نبود آن دوربین جلو.
-- چند پروفایل مدل: نام، نشانی کامل HTTPS، شناسهٔ مدل و کلید Bearer.
-- ذخیرهٔ پروفایل‌ها با AES-GCM و کلید Android Keystore؛ بدون کلید نمونه یا کلید تعبیه‌شده.
-- تحلیل یک عکس پس از رضایت؛ پایش اختیاری با بررسی هر ۱۵ ثانیه و حداکثر یک درخواست هم‌زمان.
-- پنج لایهٔ گزارش: شواهد، روابط، فرضیه‌ها، نادانسته‌ها و قدم‌های بررسی.
-- نمایش متن خام به‌عنوان راه جایگزین اگر مدل JSON ساختاریافته برنگرداند.
-- توقف پایش و لغو درخواست هنگام خروج برنامه به پس‌زمینه یا تعویض زبانه.
-- کاهش اندازهٔ تصویر به ضلع بلند ۱۲۸۰ پیکسل، تصحیح جهت و حذف EXIF هنگام بازنویسی JPEG.
-- نمایش زمان و نام مدل برای آخرین تحلیل؛ گزارش مربوط به یک عکس است، نه تصویر زنده.
-
-نام «God Eye» استعاری است. برنامه نمی‌تواند غیب، افکار، هویت اشخاص یا پشت اشیا را ببیند. عمق‌سنجی فیزیکی، اسکن سه‌بعدی و تشخیص حقیقت پنهان پیاده‌سازی نشده است. مدل ممکن است اشتباه کند؛ دستورهای احتیاطی داخل prompt تضمین رفتار مدل نیستند.
-
-## سریع‌ترین مسیر ساخت APK: GitHub Actions
-
-1. یک مخزن **خصوصی** خالی در GitHub ایجاد کن.
-2. محتوای پوشهٔ `GodEye` را در ریشهٔ مخزن قرار بده، به‌طوری که `settings.gradle.kts` و پوشهٔ `.github` در ریشه باشند. فایل ZIP را به‌تنهایی آپلود نکن. هیچ API key لازم نیست.
-3. از زبانهٔ Actions، گردش‌کار `Build God Eye APK` را اجرا کن. اولین push روی main/master هم آن را فعال می‌کند.
-4. پس از موفقیت کامل، artifact با نام `GodEye-debug-APK` را دانلود و ZIP آن را باز کن.
-5. فایل `app-debug.apk` را روی گوشی Android 8.0 یا جدیدتر نصب کن. اگر لازم شد اجازهٔ نصب از منبع مورد اعتماد را به مرورگر/فایل‌منیجر بده؛ Play Protect را خاموش نکن.
-
-این گردش‌کار فقط فایل‌های پروژه را می‌سازد؛ از این محیط اجرا نشده و هیچ مخزنی برایت ایجاد نشده است. حساب GitHub و دسترسی اینترنت لازم است؛ سهمیه و هزینه تابع حساب توست. APK از نوع debug است؛ برای انتشار به امضای release و آزمون‌های واقعی نیاز داری. امضای debug در اجراهای مختلف CI ممکن است عوض شود؛ خطای ناسازگاری امضا ممکن است به حذف نسخهٔ قدیمی نیاز داشته باشد که تنظیمات آن را پاک می‌کند.
-
-## ساخت محلی
-
-پیش‌نیازها: JDK **17** کامل، Android SDK command-line tools، Android Platform 35، Build Tools 35.0.0 و دسترسی به Google Maven/Maven Central/Gradle.
+Prerequisites: full **JDK 17**, Android SDK command-line tools, Android Platform 35, Build Tools 35.0.0, and access to Google Maven / Maven Central / Gradle.
 
 ```sh
 sdkmanager "platforms;android-35" "build-tools;35.0.0" "platform-tools"
@@ -68,13 +47,13 @@ export ANDROID_HOME=/path/to/Android/Sdk
 bash scripts/build.sh
 ```
 
-پذیرش مجوزهای SDK را خودت بخوان و انجام بده. در Windows متغیر ANDROID_HOME را تنظیم کن و اجرا کن:
+On Windows, set `ANDROID_HOME` and run:
 
 ```powershell
 powershell -File scripts/build.ps1
 ```
 
-اسکریپت‌ها Gradle 8.9 را از منبع رسمی دانلود و با SHA-256 منتشرشده همان منبع بررسی می‌کنند. توزیع و checksum هر دو از یک منبع هستند؛ این کنترل جای تأیید مستقل زنجیرهٔ تأمین را نمی‌گیرد. **فایل باینری Gradle Wrapper در بسته نیست.** اگر Gradle 8.9 نصب است، مستقیم اجرا کن:
+The scripts download Gradle 8.9 from the official source and verify it against the published SHA-256. **The Gradle Wrapper binary is not bundled.** If Gradle 8.9 is installed, run directly:
 
 ```sh
 gradle testDebugUnitTest lintDebug assembleDebug
@@ -82,66 +61,65 @@ gradle testDebugUnitTest lintDebug assembleDebug
 gradle wrapper --gradle-version 8.9
 ```
 
-در Android Studio پروژه را باز کن؛ JDK مربوط به Gradle را 17 و توزیع Gradle محلی را 8.9 انتخاب کن، یا ابتدا wrapper را با فرمان بالا بساز. بعد از ساخت:
+In Android Studio, open the project and select JDK 17 for Gradle and Gradle 8.9 as the local distribution, or generate the wrapper first. After building:
 
 ```sh
 adb install -r app/build/outputs/apk/debug/app-debug.apk
 ```
 
-## اتصال مدل
+## Connecting a model
 
-در «مدل‌ها» → «تعریف مدل» این موارد را وارد کن:
+In **Models → Define Model**, provide:
 
-- **نام پروفایل:** یک نام دلخواه.
-- **HTTPS endpoint:** مسیر کامل Chat Completions، مثلاً `https://api.openai.com/v1/chat/completions`؛ این فقط نشانی پیش‌فرض است، نه اتصال از پیش آماده.
-- **Vision model ID:** شناسهٔ دقیق یک مدل چندوجهی با ورودی تصویر از ارائه‌دهندهٔ خودت؛ هیچ مدل پیش‌فرضی حدس زده نشده است.
-- **API key:** کلید همان میزبان. کلید را در چت یا مخزن کد منتشر نکن.
+- **Profile name:** any label you like.
+- **HTTPS endpoint:** the full Chat Completions URL, e.g. `https://api.openai.com/v1/chat/completions`. This is an example only — nothing is preconfigured.
+- **Vision model ID:** the exact ID of a multimodal (image-input) model from your own provider. No default model is assumed.
+- **API key:** the key for that host. Never share your key in chats or repositories.
 
-این نسخه درخواست `messages` با `image_url` به‌صورت JPEG data URL، `stream: false` و `max_tokens: 1800` می‌فرستد. سرویس باید همین قرارداد را قبول کند. این یک درگاه عمومی برای هر نوع API نیست: Anthropic native، Gemini native، OpenAI Responses، APIهای نیازمند header سفارشی و مدل‌های ناسازگار با `max_tokens` به adapter جداگانه نیاز دارند. برخی ارائه‌دهنده‌ها حتی با ظاهر OpenAI-compatible، تصویر data URL را قبول نمی‌کنند.
+The app sends a `messages` request with `image_url` as a JPEG data URL, `stream: false`, and `max_tokens: 1800`. The service must accept this contract. This is not a universal API gateway: Anthropic native, Gemini native, OpenAI Responses, APIs requiring custom headers, and models incompatible with `max_tokens` need a separate adapter. Some OpenAI-compatible providers reject image data URLs.
 
-نشانی‌های HTTP، تغییر مسیر خودکار و URLهای دارای رمز/پارامتر مسدودند. سرور محلی باید HTTPS معتبر داشته باشد؛ استثنای TLS یا اعتماد به گواهی نامعتبر وجود ندارد.
+Plain-HTTP endpoints, automatic redirects, and URLs containing credentials/query secrets are blocked. A local server must have valid HTTPS; there is no TLS exception or trust of invalid certificates.
 
-## استفاده
+## Usage
 
-1. پروفایل مدل را ذخیره و انتخاب کن.
-2. به «چشم» برو و مجوز دوربین بده.
-3. پرسش اختیاری بنویس و «تحلیل این لحظه» را بزن.
-4. نشانی گیرنده و هشدار هزینه را در پنجرهٔ رضایت بخوان و تأیید کن.
-5. برای پایش دوره‌ای، آن را جداگانه فعال کن. در صورت درخواست کند، نوبت‌های بعدی تا آزادشدن درخواست رد می‌شوند؛ این ویدئوی بلادرنگ نیست.
-6. «توقف» درخواست فعال را لغو می‌کند، اما داده‌ای که قبلاً به سرور رسیده قابل پس‌گرفتن نیست.
+1. Save and select a model profile.
+2. Go to the **Eye** tab and grant camera permission.
+3. Optionally type a question and tap **Analyze this moment**.
+4. Read the recipient address and cost notice in the confirmation dialog, then confirm.
+5. For periodic monitoring, enable it separately. If responses are slow, subsequent ticks are skipped until the in-flight request finishes; this is not real-time video.
+6. **Stop** cancels the active request, but data already sent to the server cannot be recalled.
 
-## حریم خصوصی و محدودیت‌ها
+## Privacy & limitations
 
-- هیچ ردیاب، مجوز میکروفن، موقعیت مکانی یا سرویس پس‌زمینه اضافه نشده است.
-- تصویر موقت در کش خصوصی ساخته می‌شود و پس از آماده‌سازی یا پایان عملیات حذف می‌شود؛ پاک‌سازی بازماندهٔ احتمالی هنگام شروع دوباره انجام می‌شود. این پاک‌سازی فیزیکی تضمینی حافظه نیست.
-- پاسخ فقط در حافظهٔ نشست می‌ماند. برنامهٔ فعلی تاریخچهٔ دائمی یا همگام‌سازی ابری ندارد.
-- ارائه‌دهندهٔ مدل تصویر و پرسش را دریافت می‌کند و ممکن است طبق سیاست خود نگه دارد. پیش از ارسال تصویر اشخاص/مدارک اجازه بگیر.
-- API key به میزبان انتخابی تو فرستاده می‌شود؛ رمزگذاری محلی جلوی واردکردن نشانی مخرب را نمی‌گیرد. فقط نشانی‌های مورد اعتماد را ثبت کن.
-- تنظیمات پشتیبان‌گیری خودکار خاموش است؛ رمزگذاری، امنیت دستگاه روت‌شده یا آلوده را تضمین نمی‌کند.
-- فقط آخرین پاسخ نشان داده می‌شود؛ هیچ مکان‌یابی اشیا یا کادر تشخیص واقعی روی تصویر پیاده نشده است. خطوط منظره‌یاب صرفاً رابط بصری هستند.
+- No trackers, no microphone permission, no location, no extra background services.
+- The temporary image is created in the app's private cache and deleted after preparation or when the operation ends; leftover cleanup runs on the next start. This is not a guaranteed physical-memory wipe.
+- Responses live only in session memory. There is no permanent history or cloud sync.
+- The model provider receives the image and prompt and may retain them per its own policy. Get consent before photographing people or documents.
+- The API key is sent to the host you configure; local encryption does not protect against entering a malicious address. Only register endpoints you trust.
+- Automatic backup of settings is disabled; encryption does not guarantee security on rooted or compromised devices.
+- Only the latest response is shown; there is no object geolocation or live bounding boxes. The viewfinder overlay lines are purely cosmetic.
 
-## ساختار
+## Project structure
 
-- `MainActivity.kt`: رابط فارسی، مجوز، دوربین، رضایت ارسال، پایش.
-- `EyeViewModel.kt`: وضعیت نشست، کنترل درخواست و پاک‌سازی.
-- `VisionClient.kt`: قرارداد شبکه، لغو، محدودیت پاسخ و دستور تحلیل.
-- `ProfileStore.kt`: رمزگذاری و نگهداری پروفایل.
-- `ImageTools.kt`: جهت و اندازهٔ تصویر، JPEG بدون metadata.
-- `Models.kt`: اعتبارسنجی endpoint و تبدیل گزارش.
-- `app/src/test`: آزمون‌های واحد آمادهٔ اجرا.
-- `docs/TEST_PLAN.md`: آزمون‌های دستی و معیارهای پذیرش.
-- `docs/design-preview.html`: طرح بصری مستقل برای مرور؛ اپ اجرایی یا خروجی شبیه‌ساز نیست.
-- `scripts/validate_source.py`: بررسی ساختاری آفلاین؛ جایگزین کامپایل نیست.
+- `MainActivity.kt` — UI, permissions, camera, send confirmation, monitoring.
+- `EyeViewModel.kt` — session state, request control, cleanup.
+- `VisionClient.kt` — network contract, cancellation, response limits, analysis prompt.
+- `ProfileStore.kt` — profile encryption and storage.
+- `ImageTools.kt` — image orientation/size, metadata-free JPEG.
+- `Models.kt` — endpoint validation and report parsing.
+- `app/src/test` — runnable unit tests.
+- `docs/TEST_PLAN.md` — manual tests and acceptance criteria.
+- `scripts/validate_source.py` — offline structural checks; not a substitute for compilation.
 
-## خطاهای متداول
+## Troubleshooting
 
-- 401/403: کلید یا مجوز مدل را بررسی کن.
-- 400/422: مدل باید تصویر data URL و قرارداد این برنامه را پشتیبانی کند.
-- 404: نشانی یا شناسهٔ مدل اشتباه است.
-- 429: سهمیه، موجودی یا نرخ درخواست؛ پایش را متوقف کن.
-- خطای دانلود Gradle/SDK: اینترنت یا پراکسی محیط ساخت را بررسی کن.
-- رد دائمی مجوز دوربین: از دکمهٔ «تنظیمات مجوز برنامه» استفاده کن.
+- 401/403: check the model key/authorization.
+- 400/422: the model must support image data URLs and this app's contract.
+- 404: wrong endpoint or model ID.
+- 429: quota, balance, or rate limit — stop monitoring.
+- Gradle/SDK download errors: check build-environment internet or proxy.
+- Permanently denied camera permission: use the in-app **app settings** button.
 
-## گام بعد
+## Roadmap
 
-ابتدا CI و آزمون گوشی را انجام بده. سپس می‌توان adapter ارائه‌دهنده‌های دیگر، واردکردن عکس از گالری، تاریخچهٔ رمزگذاری‌شده یا تحلیل آفلاین روی دستگاه را به‌صورت جداگانه اضافه کرد.
+First complete CI and on-device testing. Then, as separate additions: adapters for other providers, gallery image import, encrypted history, or on-device offline analysis.

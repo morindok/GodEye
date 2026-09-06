@@ -24,10 +24,10 @@ class VisionClient {
 
     suspend fun analyze(profile: ModelProfile, jpeg: ByteArray, question: String): VisionReport {
         EndpointPolicy.validate(profile.endpoint)?.let { throw IOException(it) }
-        require(profile.model.isNotBlank()) { "شناسهٔ مدل را وارد کن." }
+        require(profile.model.isNotBlank()) { "Enter the model ID." }
         val image = "data:image/jpeg;base64," + Base64.encodeToString(jpeg, Base64.NO_WRAP)
         val content = JSONArray()
-            .put(JSONObject().put("type", "text").put("text", question.ifBlank { "این صحنه را با دقت چندلایه تحلیل کن." }))
+            .put(JSONObject().put("type", "text").put("text", question.ifBlank { "Analyze this scene carefully, in multiple layers." }))
             .put(JSONObject().put("type", "image_url").put("image_url", JSONObject().put("url", image)))
         val body = JSONObject().put("model", profile.model).put("stream", false).put("max_tokens", 1800)
             .put("messages", JSONArray()
@@ -42,30 +42,30 @@ class VisionClient {
             continuation.invokeOnCancellation { call.cancel() }
             call.enqueue(object : Callback {
                 override fun onFailure(call: Call, e: IOException) {
-                    if (continuation.isActive) continuation.resumeWithException(IOException("اتصال انجام نشد؛ اینترنت، نشانی یا زمان انتظار را بررسی کن."))
+                    if (continuation.isActive) continuation.resumeWithException(IOException("Connection failed; check internet, address, and timeout."))
                 }
                 override fun onResponse(call: Call, response: Response) {
                     try {
                         val raw = response.use {
                             if (!it.isSuccessful) throw IOException(httpError(it.code))
-                            val source = it.body?.source() ?: throw IOException("پاسخ خالی بود.")
-                            if (source.request(1_048_577L)) throw IOException("پاسخ مدل بیش از حد بزرگ است.")
+                            val source = it.body?.source() ?: throw IOException("Empty response.")
+                            if (source.request(1_048_577L)) throw IOException("The model response is too large.")
                             source.readUtf8()
                         }
                         val root = JSONObject(raw)
                         val message = root.optJSONArray("choices")?.optJSONObject(0)?.optJSONObject("message")
-                            ?: throw IOException("قالب API سازگار نیست؛ Chat Completions لازم است.")
+                            ?: throw IOException("Incompatible API format; Chat Completions is required.")
                         val value = message.opt("content")
                         val answer = when (value) {
                             is String -> value
                             is JSONArray -> (0 until value.length()).joinToString("\n") { value.optJSONObject(it)?.optString("text").orEmpty() }
                             else -> ""
                         }
-                        if (answer.isBlank()) throw IOException("مدل متن تحلیلی برنگرداند؛ پشتیبانی تصویر را بررسی کن.")
+                        if (answer.isBlank()) throw IOException("The model returned no analytical text; check image support.")
                         if (continuation.isActive) continuation.resume(answer)
                     } catch (e: Exception) {
                         if (continuation.isActive) continuation.resumeWithException(
-                            if (e is IOException) e else IOException("پاسخ مدل قابل خواندن نبود."))
+                            if (e is IOException) e else IOException("The model response could not be read."))
                     }
                 }
             })
@@ -73,13 +73,13 @@ class VisionClient {
         return ReportParser.parse(text)
     }
     private fun httpError(code: Int) = when (code) {
-        401, 403 -> "دسترسی رد شد؛ کلید و مجوز مدل را بررسی کن. (HTTP $code)"
-        404 -> "مسیر API یا مدل پیدا نشد. (HTTP 404)"
-        400, 422 -> "درخواست پذیرفته نشد؛ مدل باید تصویر و قالب Chat Completions را پشتیبانی کند. (HTTP $code)"
-        413 -> "ارائه‌دهنده تصویر را بیش از حد بزرگ تشخیص داد."
-        429 -> "محدودیت درخواست یا اعتبار حساب؛ کمی بعد دوباره تلاش کن."
-        in 300..399 -> "تغییر مسیر به دلایل امنیتی مسدود شد؛ نشانی نهایی HTTPS را وارد کن."
-        else -> "خطای سرویس مدل (HTTP $code)."
+        401, 403 -> "Access denied; check the key and model authorization. (HTTP $code)"
+        404 -> "API path or model not found. (HTTP 404)"
+        400, 422 -> "Request rejected; the model must support image input and the Chat Completions format. (HTTP $code)"
+        413 -> "The provider considered the image too large."
+        429 -> "Rate limit or account credit issue; retry later."
+        in 300..399 -> "Redirects are blocked for security; enter the final HTTPS address directly."
+        else -> "Model service error (HTTP $code)."
     }
     companion object {
         val SYSTEM_PROMPT = """

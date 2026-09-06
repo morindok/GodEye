@@ -13,7 +13,7 @@ object ImageTools {
     fun jpeg(file: File): ByteArray {
         val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
         BitmapFactory.decodeFile(file.path, bounds)
-        require(bounds.outWidth > 0 && bounds.outHeight > 0) { "تصویر معتبر نیست." }
+        require(bounds.outWidth > 0 && bounds.outHeight > 0) { "Invalid image." }
         var sample = 1
         while (maxOf(bounds.outWidth, bounds.outHeight) / sample > 2560) sample *= 2
         val decoded = requireNotNull(BitmapFactory.decodeFile(file.path, BitmapFactory.Options().apply { inSampleSize = sample }))

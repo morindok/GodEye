@@ -137,11 +137,11 @@ private fun GodEyeApp(vm: EyeViewModel = viewModel()) {
             Spacer(Modifier.width(12.dp))
             Column(Modifier.weight(1f)) {
                 Text("GOD EYE", fontSize = 24.sp, fontWeight = FontWeight.Bold, letterSpacing = 3.sp)
-                Text("ببین. بررسی کن. مطمئن نشو بی‌دلیل.", fontSize = 14.sp, color = Muted)
+                Text("See. Analyze. Never trust blindly.", fontSize = 14.sp, color = Muted)
             }
         }
         Row(Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(horizontal = 20.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            listOf("چشم", "مدل‌ها", "حریم خصوصی").forEachIndexed { index, title ->
+            listOf("Eye", "Models", "Privacy").forEachIndexed { index, title ->
                 FilterChip(selected = page == index, onClick = {
                     if (page != index) { live = false; consent = null; vm.stop(); page = index }
                 }, label = { Text(title) })
@@ -151,7 +151,7 @@ private fun GodEyeApp(vm: EyeViewModel = viewModel()) {
             Surface(Modifier.fillMaxWidth().padding(16.dp), shape = RoundedCornerShape(8.dp), color = Color(0xFF3B2027)) {
                 Column(Modifier.padding(12.dp)) {
                     Text(message, color = Color(0xFFFFDAD6))
-                    TextButton(onClick = { vm.error(null) }) { Text("بستن", color = Color(0xFFFFDAD6)) }
+                    TextButton(onClick = { vm.error(null) }) { Text("Close", color = Color(0xFFFFDAD6)) }
                 }
             }
         }
@@ -159,8 +159,8 @@ private fun GodEyeApp(vm: EyeViewModel = viewModel()) {
             0 -> LazyColumn(Modifier.weight(1f), contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
                 item {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                        Text(if (live) "● پایش دوره‌ای فعال" else "○ ارسال خودکار خاموش", color = if (live) Blue else Muted, fontSize = 14.sp)
-                        Text(state.active?.name ?: "مدل تعریف نشده", color = Muted, fontSize = 14.sp)
+                        Text(if (live) "● Periodic monitoring active" else "○ Auto-send off", color = if (live) Blue else Muted, fontSize = 14.sp)
+                        Text(state.active?.name ?: "No model configured", color = Muted, fontSize = 14.sp)
                     }
                 }
                 item {
@@ -168,64 +168,64 @@ private fun GodEyeApp(vm: EyeViewModel = viewModel()) {
                         if (permission) {
                             CameraFeed(onReady = { capture = it }, onError = { vm.error(it) })
                             Reticle(Modifier.matchParentSize())
-                            Text("پیش‌نمایش محلی • فقط هنگام تحلیل ارسال می‌شود",
+                            Text("Local preview • sent only during analysis",
                                 modifier = Modifier.align(Alignment.BottomCenter).background(Ink.copy(alpha = .88f)).fillMaxWidth().padding(12.dp),
                                 color = Color.White, fontSize = 14.sp)
                         } else {
                             Column(Modifier.align(Alignment.Center).verticalScroll(rememberScrollState()).padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally) {
                                 EyeMark(Modifier.size(48.dp))
                                 Spacer(Modifier.height(16.dp))
-                                Text("چشم آمادهٔ باز شدن است", fontSize = 20.sp)
-                                Text("برای دیدن صحنه، اجازهٔ دوربین لازم است.", color = Muted, modifier = Modifier.padding(vertical = 12.dp))
-                                Button(onClick = { launcher.launch(Manifest.permission.CAMERA) }) { Text("اجازهٔ دوربین") }
+                                Text("The eye is ready to open", fontSize = 20.sp)
+                                Text("Camera permission is required to see the scene.", color = Muted, modifier = Modifier.padding(vertical = 12.dp))
+                                Button(onClick = { launcher.launch(Manifest.permission.CAMERA) }) { Text("Grant camera permission") }
                                 TextButton(onClick = {
                                     context.startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + context.packageName)))
-                                }) { Text("تنظیمات مجوز برنامه") }
+                                }) { Text("App permission settings") }
                             }
                         }
                     }
                 }
                 item {
                     OutlinedTextField(value = question, onValueChange = { if (it.length <= 1000) question = it },
-                        modifier = Modifier.fillMaxWidth(), label = { Text("دنبال چه چیزی بگردم؟") },
-                        placeholder = { Text("مثلاً: چه جزئیاتی از این صحنه جا مانده؟") }, maxLines = 3, enabled = !state.busy && !live)
+                        modifier = Modifier.fillMaxWidth(), label = { Text("What should I look for?") },
+                        placeholder = { Text("e.g. What details of this scene am I missing?") }, maxLines = 3, enabled = !state.busy && !live)
                 }
                 item {
                     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         Button(onClick = { consent = "single" }, enabled = capture != null && state.active != null && !state.busy && !live,
-                            modifier = Modifier.weight(1f).heightIn(min = 48.dp)) { Text("تحلیل این لحظه") }
+                            modifier = Modifier.weight(1f).heightIn(min = 48.dp)) { Text("Analyze this moment") }
                         OutlinedButton(onClick = { if (live || state.busy) { live = false; vm.stop() } else consent = "live" },
                             enabled = state.busy || live || (capture != null && state.active != null), modifier = Modifier.weight(1f).heightIn(min = 48.dp)) {
-                            Text(if (live || state.busy) "توقف" else "پایش ۱۵ ثانیه‌ای")
+                            Text(if (live || state.busy) "Stop" else "15s monitoring")
                         }
                     }
                     if (state.busy) {
                         LinearProgressIndicator(modifier = Modifier.fillMaxWidth().padding(top = 12.dp))
-                        Text("در حال ثبت / ارسال / تحلیل تصویر…", color = Blue, fontSize = 14.sp, modifier = Modifier.padding(top = 8.dp))
+                        Text("Capturing / sending / analyzing…", color = Blue, fontSize = 14.sp, modifier = Modifier.padding(top = 8.dp))
                     }
-                    if (state.active == null) TextButton(onClick = { page = 1 }) { Text("اولین مدل بینایی را اضافه کن ←") }
+                    if (state.active == null) TextButton(onClick = { page = 1 }) { Text("← Add your first vision model") }
                 }
                 item {
-                    Text("تحلیل احتمالی است؛ نه کشف غیب، هویت یا افکار افراد. هر تصویر ممکن است هزینهٔ API داشته باشد.", color = Muted, fontSize = 14.sp)
+                    Text("Analysis is probabilistic — it does not reveal hidden truths, identities, or thoughts. Each image may incur API cost.", color = Muted, fontSize = 14.sp)
                 }
                 val report = state.report
                 if (report == null) {
                     item {
                         Surface(shape = RoundedCornerShape(12.dp), color = Panel) {
                             Column(Modifier.fillMaxWidth().padding(20.dp)) {
-                                Text("ورای نگاه اول؛ نه ورای شواهد", fontSize = 20.sp, fontWeight = FontWeight.Medium)
+                                Text("Beyond first glance; never beyond evidence", fontSize = 20.sp, fontWeight = FontWeight.Medium)
                                 Spacer(Modifier.height(8.dp))
-                                Text("گزارش در پنج لایه: شواهد، روابط، فرضیه‌ها، نادانسته‌ها و راه بررسی.", color = Muted)
+                                Text("Reports come in five layers: evidence, relations, hypotheses, unknowns, and follow-up checks.", color = Muted)
                             }
                         }
                     }
                 } else {
                     item {
                         Column {
-                            Text("آخرین تحلیل ثبت‌شده", color = Blue, fontSize = 14.sp)
+                            Text("Latest analysis", color = Blue, fontSize = 14.sp)
                             Text(report.summary, fontSize = 22.sp, fontWeight = FontWeight.Medium)
                             val time = state.completedAt?.let { SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date(it)) }.orEmpty()
-                            Text("${state.reportModel} • $time • مربوط به تصویر ثبت‌شده، نه ویدئوی زنده", color = Muted, fontSize = 14.sp)
+                            Text("${state.reportModel} • $time • refers to the captured photo, not a live feed", color = Muted, fontSize = 14.sp)
                         }
                     }
                     items(report.sections) { section ->
@@ -236,7 +236,7 @@ private fun GodEyeApp(vm: EyeViewModel = viewModel()) {
                             }
                         }
                     }
-                    item { TextButton(onClick = vm::clearReport) { Text("پاک کردن تحلیل از این نشست") } }
+                    item { TextButton(onClick = vm::clearReport) { Text("Clear analysis from this session") } }
                 }
             }
             1 -> ProfileScreen(vm, Modifier.weight(1f))
@@ -244,18 +244,18 @@ private fun GodEyeApp(vm: EyeViewModel = viewModel()) {
         }
     }
     consent?.let { mode ->
-        AlertDialog(onDismissRequest = { consent = null }, title = { Text("اجازهٔ ارسال تصویر") },
+        AlertDialog(onDismissRequest = { consent = null }, title = { Text("Permission to send image") },
             text = {
                 Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                    Text(if (mode == "live") "هر ۱۵ ثانیه، در صورت تمام‌شدن درخواست قبلی، یک عکس ارسال می‌شود؛ نه ویدئوی پیوسته. تا توقف یا خروج از برنامه ادامه دارد."
-                        else "یک عکس از دوربین برای تحلیل ارسال می‌شود.")
-                    Text("گیرنده: ${state.active?.name}\n${state.active?.endpoint}", color = Blue)
-                    Text("ممکن است هزینه داشته باشد. سیاست نگهداری تصویر با ارائه‌دهنده است. فقط از صحنه‌هایی استفاده کن که اجازهٔ ارسالشان را داری. توقف، دادهٔ قبلاً ارسال‌شده را پس نمی‌گیرد.")
+                    Text(if (mode == "live") "Every 15 seconds — only once the previous request finishes — one photo is sent; this is not continuous video. It continues until you stop it or leave the app."
+                        else "One photo from the camera will be sent for analysis.")
+                    Text("Recipient: ${state.active?.name}\n${state.active?.endpoint}", color = Blue)
+                    Text("This may incur cost. Image retention is governed by the provider. Only capture scenes you are allowed to send. Stop cannot recall data already sent.")
                 }
             }, confirmButton = { TextButton(onClick = {
                 consent = null
                 if (mode == "live") live = true else takeShot()
-            }) { Text("موافقم؛ شروع") } }, dismissButton = { TextButton(onClick = { consent = null }) { Text("لغو") } })
+            }) { Text("I agree — start") } }, dismissButton = { TextButton(onClick = { consent = null }) { Text("Cancel") } })
     }
 }
 
@@ -287,7 +287,7 @@ private fun CameraFeed(onReady: (ImageCapture?) -> Unit, onError: (String) -> Un
                     val selector = if (cameraProvider.hasCamera(CameraSelector.DEFAULT_BACK_CAMERA)) CameraSelector.DEFAULT_BACK_CAMERA else CameraSelector.DEFAULT_FRONT_CAMERA
                     cameraProvider.bindToLifecycle(owner, selector, p, c)
                     ready(c)
-                } catch (_: Exception) { ready(null); fail("دوربین باز نشد؛ مجوز و در دسترس بودن دوربین را بررسی کن.") }
+                } catch (_: Exception) { ready(null); fail("Camera failed to open; check permission and camera availability.") }
             }
         }, ContextCompat.getMainExecutor(context))
         onDispose {
@@ -329,10 +329,10 @@ private fun ProfileScreen(vm: EyeViewModel, modifier: Modifier) {
     var editing by remember { mutableStateOf<ModelProfile?>(null) }
     LazyColumn(modifier, contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         item {
-            Text("یک چشم، مدل‌های مختلف", fontSize = 24.sp, fontWeight = FontWeight.Medium)
-            Text("ارائه‌دهنده باید تصویر و API سازگار با OpenAI Chat Completions را پشتیبانی کند؛ نه هر مدل متنی.", color = Muted, modifier = Modifier.padding(top = 8.dp))
+            Text("One eye, many models", fontSize = 24.sp, fontWeight = FontWeight.Medium)
+            Text("Your provider must support image input and an OpenAI Chat Completions-compatible API — not just text models.", color = Muted, modifier = Modifier.padding(top = 8.dp))
         }
-        item { Button(onClick = { editing = ModelProfile() }) { Text("+ تعریف مدل") } }
+        item { Button(onClick = { editing = ModelProfile() }) { Text("+ Add model") } }
         items(vm.state.profiles, key = { it.id }) { profile ->
             Surface(shape = RoundedCornerShape(12.dp), color = Panel, border = androidx.compose.foundation.BorderStroke(1.dp, if(vm.state.selectedId == profile.id) Blue else Line)) {
                 Column(Modifier.fillMaxWidth().padding(16.dp)) {
@@ -340,14 +340,14 @@ private fun ProfileScreen(vm: EyeViewModel, modifier: Modifier) {
                     Text(profile.model, color = Blue)
                     Text(Uri.parse(profile.endpoint).host.orEmpty(), color = Muted, fontSize = 14.sp)
                     Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                        TextButton(onClick = { vm.select(profile.id) }) { Text(if(vm.state.selectedId == profile.id) "✓ فعال" else "انتخاب") }
-                        TextButton(onClick = { editing = profile }) { Text("ویرایش") }
-                        TextButton(onClick = { vm.delete(profile.id) }) { Text("حذف", color = MaterialTheme.colorScheme.error) }
+                        TextButton(onClick = { vm.select(profile.id) }) { Text(if(vm.state.selectedId == profile.id) "✓ Active" else "Select") }
+                        TextButton(onClick = { editing = profile }) { Text("Edit") }
+                        TextButton(onClick = { vm.delete(profile.id) }) { Text("Delete", color = MaterialTheme.colorScheme.error) }
                     }
                 }
             }
         }
-        item { Text("کلیدها روی دستگاه با Android Keystore رمزگذاری می‌شوند. کلید فقط به نشانی انتخابی تو فرستاده می‌شود؛ نشانی را با دقت بررسی کن.", color = Muted) }
+        item { Text("Keys are encrypted on-device with Android Keystore. Your key is sent only to the endpoint you choose — verify the address carefully.", color = Muted) }
     }
     editing?.let { profile ->
         key(profile.id) {
@@ -356,22 +356,22 @@ private fun ProfileScreen(vm: EyeViewModel, modifier: Modifier) {
             var model by remember { mutableStateOf(profile.model) }
             var apiKey by remember { mutableStateOf(profile.apiKey) }
             var localError by remember { mutableStateOf<String?>(null) }
-            AlertDialog(onDismissRequest = { editing = null }, title = { Text("اتصال مدل بینایی") },
+            AlertDialog(onDismissRequest = { editing = null }, title = { Text("Connect a vision model") },
                 text = {
                     Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                        OutlinedTextField(name, { name = it }, label = { Text("نام پروفایل") }, singleLine = true)
+                        OutlinedTextField(name, { name = it }, label = { Text("Profile name") }, singleLine = true)
                         CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                             OutlinedTextField(endpoint, { endpoint = it }, label = { Text("HTTPS endpoint (full path)") }, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri), maxLines = 3)
                             OutlinedTextField(model, { model = it }, label = { Text("Vision model ID") }, singleLine = true)
                             OutlinedTextField(apiKey, { apiKey = it }, label = { Text("API key (Bearer)") }, visualTransformation = PasswordVisualTransformation(), keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password), singleLine = true)
                         }
-                        Text("مسیر کامل، معمولاً /v1/chat/completions. شناسهٔ مدل را از ارائه‌دهنده بگیر. کلید برای سرور بدون احراز هویت می‌تواند خالی باشد.", fontSize = 14.sp, color = Muted)
+                        Text("Full path, usually /v1/chat/completions. Get the model ID from your provider. The key may be empty for servers without auth.", fontSize = 14.sp, color = Muted)
                         localError?.let { Text(it, color = MaterialTheme.colorScheme.error) }
                     }
                 }, confirmButton = { TextButton(onClick = {
                     val p = profile.copy(name = name.trim(), endpoint = endpoint.trim(), model = model.trim(), apiKey = apiKey.trim())
                     if (vm.save(p)) editing = null else localError = vm.state.error
-                }) { Text("ذخیرهٔ امن") } }, dismissButton = { TextButton(onClick = { editing = null }) { Text("لغو") } })
+                }) { Text("Save securely") } }, dismissButton = { TextButton(onClick = { editing = null }) { Text("Cancel") } })
         }
     }
 }
@@ -380,16 +380,16 @@ private fun ProfileScreen(vm: EyeViewModel, modifier: Modifier) {
 private fun PrivacyScreen(modifier: Modifier) {
     Column(modifier.verticalScroll(rememberScrollState()).padding(24.dp), verticalArrangement = Arrangement.spacedBy(20.dp)) {
         EyeMark(Modifier.size(64.dp))
-        Text("قدرت دیدن، با مرزهای روشن", fontSize = 26.sp)
-        Text("God Eye ابزار تحلیل تصویر است. نام و ظاهر آن استعاری است؛ نه چشم برزخی واقعی و نه ابزار کشف حقیقت پنهان.")
-        Text("چه چیزی ارسال می‌شود؟", color = Blue, fontSize = 20.sp)
-        Text("فقط عکس انتخاب‌شده از دوربین، پرسش تو و دستور تحلیل؛ به نشانی مدلی که خودت تنظیم کرده‌ای. عکس تا ضلع بلند ۱۲۸۰ پیکسل کوچک می‌شود و بدون EXIF/GPS بازنویسی می‌شود. جزئیات ریز ممکن است از دست بروند.")
-        Text("چه چیزی ذخیره می‌شود؟", color = Blue, fontSize = 20.sp)
-        Text("پروفایل مدل و کلید به‌صورت رمزگذاری‌شده روی دستگاه می‌مانند. عکس موقت در پوشهٔ خصوصی کش ساخته و بعد از آماده‌سازی یا پایان درخواست حذف می‌شود؛ بازمانده‌های احتمالی در شروع بعدی پاک می‌شوند. آخرین تحلیل فقط در حافظهٔ نشست است. حذف کش به معنی پاک‌سازی تضمینی فیزیکی نیست.")
-        Text("کنترل دست توست", color = Blue, fontSize = 20.sp)
-        Text("هیچ صدا، موقعیت مکانی، ردیاب یا ارسال پس‌زمینه‌ای اضافه نشده است. با رفتن برنامه به پس‌زمینه یا تعویض زبانه، پایش و درخواست فعال متوقف می‌شوند. توقف نمی‌تواند داده‌ای را که به سرور رسیده پس بگیرد. نگهداری داده و هزینه با ارائه‌دهنده است.")
-        Text("نتیجه را راستی‌آزمایی کن", color = Blue, fontSize = 20.sp)
-        Text("مدل ممکن است اشتباه کند. از تصویر نمی‌توان افکار، نیت، هویت یا ویژگی‌های حساس افراد را اثبات کرد. این برنامه ابزار تشخیص پزشکی، قضاوت حقوقی یا تصمیم ایمنی نیست. متن‌های داخل تصویر نیز ممکن است مدل را گمراه کنند.")
-        Text("God Eye • 0.1.0 / نسخهٔ اولیه", color = Muted, fontSize = 14.sp)
+        Text("The power to see, with clear boundaries", fontSize = 26.sp)
+        Text("God Eye is an image-analysis tool. Its name and look are metaphorical — not a real X-ray eye and not a hidden-truth detector.")
+        Text("What is sent?", color = Blue, fontSize = 20.sp)
+        Text("Only the captured photo, your question, and the analysis prompt — to the model address you configured. The photo is downscaled to a 1280px long edge and rewritten without EXIF/GPS. Fine details may be lost.")
+        Text("What is stored?", color = Blue, fontSize = 20.sp)
+        Text("The model profile and key stay encrypted on the device. The temporary photo is created in the private cache and deleted after preparation or when the request ends; leftovers are cleaned on next start. The latest analysis lives only in session memory. Cache deletion is not a guaranteed physical wipe.")
+        Text("You are in control", color = Blue, fontSize = 20.sp)
+        Text("No microphone, location, trackers, or background uploads. Monitoring and active requests stop when the app goes to background or the tab changes. Stop cannot recall data already sent to the server. Retention and cost are governed by the provider.")
+        Text("Verify the results", color = Blue, fontSize = 20.sp)
+        Text("The model can be wrong. An image cannot prove thoughts, intent, identity, or sensitive attributes. This app is not a medical, legal, or safety decision tool. Text inside images may also mislead the model.")
+        Text("God Eye • 0.1.0 / initial release", color = Muted, fontSize = 14.sp)
     }
 }

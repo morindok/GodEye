@@ -31,35 +31,35 @@ class EyeViewModel(application: Application) : AndroidViewModel(application) {
         try {
             val profiles = store.load()
             state = state.copy(profiles = profiles, selectedId = profiles.firstOrNull()?.id)
-        } catch (_: Exception) { state = state.copy(error = "پروفایل‌های ذخیره‌شده باز نشدند؛ دوباره تنظیم کن.") }
+        } catch (_: Exception) { state = state.copy(error = "Could not load saved profiles; please reconfigure.") }
     }
     fun save(profile: ModelProfile): Boolean {
         EndpointPolicy.validate(profile.endpoint)?.let { error(it); return false }
-        if (profile.model.isBlank() || profile.name.isBlank()) { error("نام پروفایل و شناسهٔ مدل لازم است."); return false }
-        if (profile.apiKey.any { it.code !in 32..126 }) { error("کلید API باید تک‌خطی و بدون نویسهٔ نامعتبر باشد."); return false }
+        if (profile.model.isBlank() || profile.name.isBlank()) { error("Profile name and model ID are required."); return false }
+        if (profile.apiKey.any { it.code !in 32..126 }) { error("The API key must be single-line with no invalid characters."); return false }
         val list = state.profiles.filterNot { it.id == profile.id } + profile
         return try {
             store.save(list); state = state.copy(profiles = list, selectedId = profile.id, error = null); true
-        } catch (_: Exception) { error("ذخیرهٔ امن کلید انجام نشد؛ هیچ کلیدی به‌صورت ساده ذخیره نشد."); false }
+        } catch (_: Exception) { error("Secure key storage failed; no key was stored in plain text."); false }
     }
     fun delete(id: String) {
         val list = state.profiles.filterNot { it.id == id }
         try {
             store.save(list)
             state = state.copy(profiles = list, selectedId = if (state.selectedId == id) list.firstOrNull()?.id else state.selectedId, error = null)
-        } catch (_: Exception) { error("حذف پروفایل انجام نشد.") }
+        } catch (_: Exception) { error("Profile deletion failed.") }
     }
     fun select(id: String) { state = state.copy(selectedId = id, error = null) }
     fun error(message: String?) { state = state.copy(error = message) }
     fun beginCapture(): Int? {
         if (state.busy) return null
-        if (state.active == null) { error("ابتدا یک مدل بینایی تعریف کن."); return null }
+        if (state.active == null) { error("Define a vision model first."); return null }
         generation += 1
         state = state.copy(busy = true, error = null)
         return generation
     }
     fun captureFailed(token: Int) {
-        if (token == generation) state = state.copy(busy = false, error = "ثبت تصویر انجام نشد؛ دوربین را بررسی کن.")
+        if (token == generation) state = state.copy(busy = false, error = "Capture failed; check the camera.")
     }
     fun analyze(file: File, token: Int, question: String) {
         val profile = state.active
@@ -72,7 +72,7 @@ class EyeViewModel(application: Application) : AndroidViewModel(application) {
                 if (token == generation) state = state.copy(report = result, completedAt = System.currentTimeMillis(), reportModel = profile.name)
             } catch (e: CancellationException) { throw e }
             catch (e: Exception) {
-                if (token == generation) error(e.message ?: "تحلیل انجام نشد.")
+                if (token == generation) error(e.message ?: "Analysis failed.")
             } finally {
                 file.delete()
                 if (token == generation) state = state.copy(busy = false)
