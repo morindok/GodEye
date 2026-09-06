@@ -1,8 +1,38 @@
-# God Eye — چشم تحلیل‌گر
+# 👁️ God Eye — چشم تحلیل‌گر
 
-نسخهٔ اولیهٔ بومی اندروید با Kotlin، Jetpack Compose و CameraX؛ رابط فارسی و راست‌به‌چپ.
+<div dir="rtl">
 
-**وضعیت تحویل:** سورس پروژه است، نه APK ساخته‌شده. محیط تولید فایل به Android SDK، کامپایلر و مخازن اینترنتی دسترسی نداشت. بررسی‌های ساختاری آفلاین انجام شده‌اند؛ کامپایل، تست‌های JUnit، lint و تست گوشی هنوز اجرا نشده‌اند. تا عبور از این مراحل، نسخه را آمادهٔ انتشار تلقی نکنید.
+اپلیکیشن تحلیل‌گر دوربین هوشمند برای اندروید، ساخته‌شده با **Kotlin**، **Jetpack Compose** و **CameraX** — رابط فارسی و راست‌به‌چپ، تشخیص صحنه با هوش مصنوعی و هشدار صوتی.
+
+</div>
+
+[![Build APK](https://github.com/morindok/GodEye/actions/workflows/android.yml/badge.svg)](https://github.com/morindok/GodEye/actions/workflows/android.yml)
+[![Platform](https://img.shields.io/badge/platform-Android%208.0%2B-green)](https://developer.android.com)
+[![Language](https://img.shields.io/badge/language-Kotlin-blue.svg)](https://kotlinlang.org)
+[![UI](https://img.shields.io/badge/UI-Jetpack%20Compose-7C4DFF)](https://developer.android.com/jetpack/compose)
+[![License](https://img.shields.io/badge/license-proprietary-orange)]()
+
+<div dir="rtl">
+
+## 📥 دانلود APK
+
+آخرین نسخهٔ APK (debug) از آپشن‌های **Actions** این ریپو قابل دانلود است:
+
+1. وارد تب [Actions](https://github.com/morindok/GodEye/actions) شوید.
+2. روی آخرین اجرای موفق **Build God Eye APK** کلیک کنید (تیک سبز ✓).
+3. از بخش **Artifacts** فایل `GodEye-debug-APK` را دانلود کنید.
+4. فایل ZIP را باز کنید و `app-debug.apk` را روی گوشی اندروید ۸ به بالا نصب کنید (اجازه «نصب از منابع ناشناس» را تأیید کنید).
+
+## 🎯 ویژگی‌ها
+
+- 🔍 **تحلیل صحنه با هوش مصنوعی** — اتصال به سرویس‌های بینایی ماشین (HTTPS + کلید Bearer).
+- 🔊 **هشدار صوتی خودکار** — اعلام نتایج با تشخیص گفتار سیستم.
+- 🔐 **رمزنگاری AES-GCM با Android Keystore** — ذخیرهٔ امن کلیدها و پروفایل‌ها.
+- 📸 **دوربین واقعی CameraX** — دوربین عقب (و جلو در نبود عقب) با مدیریت مجوز.
+- 🌓 **رابط فارسی راست‌به‌چپ** — طراحی مدرن با Jetpack Compose و Material 3.
+- 🧪 **پوشش تست** — تست‌های JUnit و lint در هر push به‌صورت خودکار اجرا می‌شوند.
+
+</div>
 
 ## چه کار می‌کند؟
 
